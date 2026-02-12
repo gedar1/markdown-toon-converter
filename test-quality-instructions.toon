@@ -1,0 +1,57 @@
+--- test_quality_workflow
+step | task | description | tools | validation | priority
+1 | Read_File | Understand component/service | read_file | Understand logic | high
+2 | Create_Tests | Write test cases | test framework | Tests compile | high
+3 | Check_Errors | Verify typing | get_errors | No type errors | critical
+4 | Execute_Tests | Run test suite | ng test | All pass | high
+5 | Review_Results | Analyze output | test runner | Coverage adequate | medium
+6 | Fix_Issues | Correct failures | editor | All resolved | high
+
+--- test_structure_requirements
+element | requirement | correct_format | incorrect_format | priority | reason
+Describe_Wrapper | Use fdescribe | fdescribe('Name', () => {}) | describe('Name', () => {}) | critical | Focused testing
+Test_Variables | No readonly in let | let component: Component | let readonly component | high | Variable scope
+Mock_Objects | Create with spy | jasmine.createSpyObj() | Manual mock object | high | Consistency
+Test_Setup | beforeEach config | beforeEach(async () => {}) | Direct initialization | high | Test isolation
+Assertions | Include expectations | expect(x).toBe(y) | Untested code | high | Verification
+
+--- readonly_in_tests_rules
+scope | element_type | apply_readonly | reason | example
+Class_Property | Subscription, Config | YES | Never reassigned | private readonly subscription = new Sub()
+Test_Variable | let component, let fixture | NO | Variable scope | let component: ComponentName;
+Const_Local | const in function | NO | Function scope | const mockData = { ... };
+Service_Mock | jasmine.createSpyObj | NO | Created in beforeEach | let mockService: jasmine.SpyObj<Service>;
+Constructor_Injection | DI parameter | YES | Class-level property | constructor(private readonly service: Service)
+
+--- mocking_patterns_standard
+mock_type | creation_method | example | assertions | usage_frequency
+Service_Spy | jasmine.createSpyObj | spy('Service', ['method']) | expect(spy.method).toHaveBeenCalled() | very_high
+BehaviorSubject | new BehaviorSubject() | new BehaviorSubject(value) | subject.next(newValue) | high
+HttpClient | HttpTestingController | TestBed.inject(HttpTestingController) | controller.expectOne() | high
+Component_Fixture | TestBed.createComponent | TestBed.createComponent(Component) | fixture.detectChanges() | very_high
+Observable | of() or throwError() | of(data) or throwError(err) | subscribe and assert | high
+
+--- test_execution_command_patterns
+test_type | command | flags | example | expected_result
+Single_File | ng test | --include | ng test --include="**/component.spec.ts" | 1+ tests pass
+Suite | ng test | --browsers,--watch | ng test --browsers=ChromeHeadless --watch=false | All tests pass
+Coverage | ng test | --code-coverage | ng test --code-coverage | coverage/* generated
+Debug | ng test | (default browser) | ng test | Chrome debugging tools available
+CI_Pipeline | ng test | --no-watch,--browsers=ChromeHeadless | ng test --no-watch --browsers=ChromeHeadless | Exit code 0
+
+--- error_checking_workflow
+step | task | command | tool | fix_priority | when_to_run
+1 | Check_Typing | get_errors | typescript | critical | After every change
+2 | Check_Imports | grep for unused | linter | high | During development
+3 | Check_Syntax | tsc --noEmit | typescript | critical | Before commit
+4 | Check_Tests | get_errors for *.spec.ts | typescript | critical | Before test run
+5 | Fix_All | Run fixes | sonarqube | high | Before PR
+
+--- test_import_optimization
+check | applies_to | action | reason | example
+Lifecycle_OnInit | Components | Remove if no ngOnInit() | Keep only used | Remove OnInit from import
+Lifecycle_OnDestroy | Components | Remove if no ngOnDestroy() | Keep only used | Remove OnDestroy from import
+Service_Import | Components/Services | Remove if not injected | Keep only used | Remove unused service import
+Interface_Import | All | Remove if not implemented | Keep only used | Remove unused interface
+Type_Import | All | Remove if not referenced | Keep only used | Remove unused type annotation
+Unused_Variable | Tests | Remove | Keep only used | Remove unused let declarations

@@ -1,0 +1,124 @@
+.validationStatus {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  border-radius: 4px;
+  background-color: rgba(0, 0, 0, 0.2);
+  font-size: 0.9rem;
+  position: relative;
+}
+
+.collapsed {
+  padding: 0;
+  background-color: transparent;
+}
+
+.closeButton {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: transparent;
+  border: none;
+  color: var(--color-text-secondary);
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  line-height: 1;
+  transition: all 0.2s ease;
+  border-radius: 4px;
+  z-index: 1;
+}
+
+.closeButton:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--color-text);
+}
+
+.toggleButton {
+  width: 100%;
+  padding: 0.5rem;
+  background-color: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  color: var(--color-text);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+}
+
+.toggleButton:hover {
+  background-color: rgba(0, 0, 0, 0.3);
+  border-color: var(--color-primary);
+}
+
+.compactIcon {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-weight: 500;
+}
+
+.expandIcon {
+  font-size: 0.7rem;
+  opacity: 0.7;
+}
+
+.validationSection {
+  margin-bottom: 0.75rem;
+}
+
+.validationSection:last-child {
+  margin-bottom: 0;
+}
+
+.validationHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.validationIcon {
+  font-size: 1.1rem;
+}
+
+.validationErrors .validationHeader {
+  color: #ff6b6b;
+}
+
+.validationWarnings .validationHeader {
+  color: #ffd93d;
+}
+
+.validationSuccess .validationHeader {
+  color: #51cf66;
+}
+
+.validationList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.validationItem {
+  padding: 0.25rem 0;
+  padding-left: 1.5rem;
+}
+
+.validationLocation {
+  font-weight: 600;
+  margin-right: 0.5rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.validationMessage {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.validationSuccess .validationMessage {
+  padding-left: 1.5rem;
+  color: rgba(255, 255, 255, 0.8);
+}

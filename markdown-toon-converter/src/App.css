@@ -1,0 +1,585 @@
+/**
+ * Main application styles.
+ * Implements responsive layout with CSS Grid and custom color palette.
+ * 
+ * Validates: Requirements 15.1, 15.2, 15.3, 15.5
+ */
+
+/* ============================================
+   COLOR PALETTE - Blue Theme
+   ============================================ */
+:root {
+  /* Base Colors */
+  --smart-blue: #0466c8ff;
+  --sapphire: #0353a4ff;
+  --regal-navy: #023e7dff;
+  --prussian-blue: #002855ff;
+  --prussian-blue-2: #001845ff;
+  --prussian-blue-3: #001233ff;
+  --twilight-indigo: #33415cff;
+  --blue-slate: #5c677dff;
+  --slate-grey: #7d8597ff;
+  --lavender-grey: #979dacff;
+}
+
+/* ============================================
+   LIGHT THEME (Default)
+   ============================================ */
+:root {
+  /* Primary Colors */
+  --color-primary: var(--smart-blue);
+  --color-primary-hover: var(--sapphire);
+  --color-primary-light: #0466c820;
+
+  /* Background Colors */
+  --color-background: #f8f9fa;
+  --color-surface: #ffffff;
+  --color-surface-hover: #f0f2f5;
+
+  /* Border Colors */
+  --color-border: #e1e4e8;
+  --color-border-hover: var(--lavender-grey);
+
+  /* Text Colors */
+  --color-text: var(--prussian-blue-3);
+  --color-text-secondary: var(--blue-slate);
+  --color-text-muted: var(--slate-grey);
+
+  /* Accent Colors */
+  --color-accent: var(--regal-navy);
+  --color-accent-light: var(--twilight-indigo);
+
+  /* Spacing */
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 1rem;
+  --spacing-md: 1.5rem;
+  --spacing-lg: 2rem;
+
+  /* Other */
+  --border-radius: 8px;
+  --border-radius-circle: 100px;
+  --min-touch-target: 44px;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* ============================================
+   DARK THEME - Blue Palette Optimized for Developers
+   ============================================ */
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Primary Colors - Azul brillante para acciones */
+    --color-primary: #4a9eff;
+    --color-primary-hover: #6bb0ff;
+    --color-primary-light: #4a9eff30;
+
+    /* Background Colors - Azul oscuro pero legible */
+    --color-background: #0a1929; /* Azul muy oscuro (base) */
+    --color-surface: #132f4c; /* Azul oscuro (paneles) */
+    --color-surface-hover: #1a3a5c;
+
+    /* Border Colors - Azul medio para definición */
+    --color-border: #1e4976;
+    --color-border-hover: #2d5a8f;
+
+    /* Text Colors - Azul muy claro para alto contraste */
+    --color-text: #e3f2fd; /* Azul muy claro (principal) */
+    --color-text-secondary: #90caf9; /* Azul claro (secundario) */
+    --color-text-muted: #5c8ab8;
+
+    /* Accent Colors - Mantiene tu paleta original */
+    --color-accent: var(--smart-blue);
+    --color-accent-light: #64b5f6;
+
+    /* Code/Editor specific - Optimizado para lectura */
+    --color-code-bg: #0d1f2d;
+    --color-code-text: #e3f2fd;
+    --color-line-number: #5c8ab8;
+
+    /* Syntax highlighting (opcional para Markdown) */
+    --color-keyword: #82b1ff; /* Azul claro para keywords */
+    --color-string: #ffab91; /* Naranja suave para strings */
+    --color-comment: #81c784; /* Verde suave para comentarios */
+    --color-function: #4fc3f7; /* Cyan para funciones */
+
+    /* Shadows for dark theme - Más profundos */
+    --shadow-sm: 0 2px 4px rgba(0, 10, 20, 0.6);
+    --shadow-md: 0 4px 8px rgba(0, 10, 20, 0.7);
+    --shadow-lg: 0 10px 20px rgba(0, 10, 20, 0.8);
+  }
+}
+
+/* ============================================
+   MANUAL THEME TOGGLE (Optional)
+   ============================================ */
+[data-theme="light"] {
+  --color-primary: var(--smart-blue);
+  --color-primary-hover: var(--sapphire);
+  --color-background: #f8f9fa;
+  --color-surface: #ffffff;
+  --color-border: #e1e4e8;
+  --color-text: var(--prussian-blue-3);
+  --color-text-secondary: var(--blue-slate);
+}
+
+[data-theme="dark"] {
+  /* Primary Colors - Azul brillante para acciones */
+  --color-primary: #4a9eff;
+  --color-primary-hover: #6bb0ff;
+  --color-primary-light: #4a9eff30;
+
+  /* Background Colors - Azul oscuro pero legible */
+  --color-background: #0a1929;
+  --color-surface: #132f4c;
+  --color-surface-hover: #1a3a5c;
+
+  /* Border Colors - Azul medio para definición */
+  --color-border: #1e4976;
+  --color-border-hover: #2d5a8f;
+
+  /* Text Colors - Azul muy claro para alto contraste */
+  --color-text: #e3f2fd;
+  --color-text-secondary: #90caf9;
+  --color-text-muted: #5c8ab8;
+
+  /* Accent Colors */
+  --color-accent: var(--smart-blue);
+  --color-accent-light: #64b5f6;
+
+  /* Shadows */
+  --shadow-sm: 0 2px 4px rgba(0, 10, 20, 0.6);
+  --shadow-md: 0 4px 8px rgba(0, 10, 20, 0.7);
+  --shadow-lg: 0 10px 20px rgba(0, 10, 20, 0.8);
+}
+
+/* ============================================
+   BASE STYLES
+   ============================================ */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color: var(--color-text);
+  background-color: var(--color-background);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+/* ============================================
+   APP LAYOUT
+   ============================================ */
+.app {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-header {
+  padding: var(--spacing-md);
+  background: linear-gradient(
+    135deg,
+    var(--color-primary) 0%,
+    var(--color-accent) 100%
+  );
+  border-bottom: 2px solid var(--color-primary-hover);
+  text-align: center;
+  box-shadow: var(--shadow-md);
+}
+
+.app-header h1 {
+  margin: 0 0 var(--spacing-xs) 0;
+  font-size: 2rem;
+  font-weight: 600;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.app-header p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.9rem;
+}
+
+.app-main {
+  flex: 1;
+  display: grid;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
+  overflow: hidden;
+}
+
+/* Mobile layout: vertical stacking */
+@media (max-width: 767px) {
+  .app-main {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+  }
+}
+
+/* Desktop layout: side-by-side */
+@media (min-width: 768px) {
+  .app-main {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+  }
+}
+
+/* ============================================
+   EDITOR & PREVIEW SECTIONS
+   ============================================ */
+.editor-section,
+.preview-section {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-sm);
+  overflow: hidden;
+  min-height: 500px;
+  height: calc(100vh - 150px);
+  box-shadow: var(--shadow-sm);
+  transition:
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.editor-section:hover,
+.preview-section:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--color-border-hover);
+}
+
+.editor-section {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
+.editor-section > .editor-container {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.editor-header,
+.preview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-sm);
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+  padding-bottom: var(--spacing-sm);
+  border-bottom: 2px solid var(--color-primary-light);
+}
+
+.editor-section h2,
+.preview-section h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+/* ============================================
+   MODE SELECTORS
+   ============================================ */
+.input-mode-selector,
+.preview-mode-selector {
+  display: flex;
+  gap: var(--spacing-xs);
+}
+
+.input-mode-selector button,
+.preview-mode-selector button {
+  min-height: var(--min-touch-target);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  border: 2px solid var(--color-border);
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.input-mode-selector button:hover,
+.preview-mode-selector button:hover {
+  background-color: var(--color-surface-hover);
+  border-color: var(--color-primary);
+  transform: translateY(-1px);
+}
+
+.input-mode-selector button.active,
+.preview-mode-selector button.active {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: white;
+  box-shadow: var(--shadow-sm);
+}
+
+/* ============================================
+   EDITOR TEXTAREA
+   ============================================ */
+.editor-textarea {
+  flex: 1;
+  width: 100%;
+  min-height: 300px;
+  padding: var(--spacing-sm);
+  background-color: var(--color-background);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  resize: vertical;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.editor-textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-light);
+}
+
+/* ============================================
+   PREVIEW CONTENT
+   ============================================ */
+.preview-content {
+  flex: 1;
+  padding: var(--spacing-sm);
+  background-color: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+  overflow: auto;
+}
+
+.preview-content pre {
+  margin: 0;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.9rem;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  color: var(--color-text);
+}
+
+/* ============================================
+   FOOTER
+   ============================================ */
+.app-footer {
+  padding: var(--spacing-md);
+  background-color: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+  text-align: center;
+  color: var(--color-text-secondary);
+  font-size: 0.85rem;
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.app-footer p {
+  margin: 0;
+}
+
+/* ============================================
+   RESPONSIVE ADJUSTMENTS
+   ============================================ */
+@media (max-width: 767px) {
+  .app-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .preview-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .preview-mode-selector {
+    width: 100%;
+  }
+
+  .preview-mode-selector button {
+    flex: 1;
+  }
+}
+
+/* Ensure functionality across viewport sizes */
+@media (min-width: 320px) and (max-width: 2560px) {
+  .app {
+    max-width: 100%;
+  }
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+.text-primary {
+  color: var(--color-primary);
+}
+
+.text-secondary {
+  color: var(--color-text-secondary);
+}
+
+.bg-primary {
+  background-color: var(--color-primary);
+}
+
+.bg-surface {
+  background-color: var(--color-surface);
+}
+
+.border-primary {
+  border-color: var(--color-primary);
+}
+
+/* ============================================
+   ENHANCED DARK THEME STYLES
+   ============================================ */
+@media (prefers-color-scheme: dark) {
+  /* Mejoras para el editor en modo oscuro */
+  .editor-section,
+  .preview-section {
+    background: linear-gradient(135deg, #132f4c 0%, #0f2942 100%);
+    border-color: #1e4976;
+  }
+
+  .editor-section:hover,
+  .preview-section:hover {
+    border-color: #2d5a8f;
+    box-shadow: 0 4px 12px rgba(74, 158, 255, 0.15);
+  }
+
+  /* Header con gradiente azul profundo */
+  .app-header {
+    background: linear-gradient(135deg, #0d47a1 0%, #1565c0 50%, #1976d2 100%);
+    border-bottom: 2px solid #4a9eff;
+  }
+
+  /* Botones en modo oscuro */
+  .input-mode-selector button,
+  .preview-mode-selector button {
+    background-color: rgba(19, 47, 76, 0.6);
+    border-color: #1e4976;
+    color: #e3f2fd;
+  }
+
+  .input-mode-selector button:hover,
+  .preview-mode-selector button:hover {
+    background-color: rgba(26, 58, 92, 0.8);
+    border-color: #4a9eff;
+  }
+
+  .input-mode-selector button.active,
+  .preview-mode-selector button.active {
+    background-color: #4a9eff;
+    border-color: #6bb0ff;
+    box-shadow: 0 0 12px rgba(74, 158, 255, 0.4);
+  }
+
+  /* Editor textarea en modo oscuro */
+  .editor-textarea {
+    background-color: #0d1f2d;
+    color: #e3f2fd;
+    border-color: #1e4976;
+  }
+
+  .editor-textarea:focus {
+    border-color: #4a9eff;
+    box-shadow: 0 0 0 3px rgba(74, 158, 255, 0.25);
+  }
+
+  /* Preview content */
+  .preview-content {
+    background-color: #0d1f2d;
+    border-color: #1e4976;
+  }
+
+  .preview-content pre {
+    color: #e3f2fd;
+  }
+
+  /* Footer en modo oscuro */
+  .app-footer {
+    background: linear-gradient(180deg, #132f4c 0%, #0a1929 100%);
+    border-top-color: #1e4976;
+  }
+}
+
+/* Estilos para data-theme="dark" (toggle manual) */
+[data-theme="dark"] .editor-section,
+[data-theme="dark"] .preview-section {
+  background: linear-gradient(135deg, #132f4c 0%, #0f2942 100%);
+  border-color: #1e4976;
+}
+
+[data-theme="dark"] .editor-section:hover,
+[data-theme="dark"] .preview-section:hover {
+  border-color: #2d5a8f;
+  box-shadow: 0 4px 12px rgba(74, 158, 255, 0.15);
+}
+
+[data-theme="dark"] .app-header {
+  background: linear-gradient(135deg, #0d47a1 0%, #1565c0 50%, #1976d2 100%);
+  border-bottom: 2px solid #4a9eff;
+}
+
+[data-theme="dark"] .input-mode-selector button,
+[data-theme="dark"] .preview-mode-selector button {
+  background-color: rgba(19, 47, 76, 0.6);
+  border-color: #1e4976;
+  color: #e3f2fd;
+}
+
+[data-theme="dark"] .input-mode-selector button:hover,
+[data-theme="dark"] .preview-mode-selector button:hover {
+  background-color: rgba(26, 58, 92, 0.8);
+  border-color: #4a9eff;
+}
+
+[data-theme="dark"] .input-mode-selector button.active,
+[data-theme="dark"] .preview-mode-selector button.active {
+  background-color: #4a9eff;
+  border-color: #6bb0ff;
+  box-shadow: 0 0 12px rgba(74, 158, 255, 0.4);
+}
+
+[data-theme="dark"] .editor-textarea {
+  background-color: #0d1f2d;
+  color: #e3f2fd;
+  border-color: #1e4976;
+}
+
+[data-theme="dark"] .editor-textarea:focus {
+  border-color: #4a9eff;
+  box-shadow: 0 0 0 3px rgba(74, 158, 255, 0.25);
+}
+
+[data-theme="dark"] .preview-content {
+  background-color: #0d1f2d;
+  border-color: #1e4976;
+}
+
+[data-theme="dark"] .preview-content pre {
+  color: #e3f2fd;
+}
+
+[data-theme="dark"] .app-footer {
+  background: linear-gradient(180deg, #132f4c 0%, #0a1929 100%);
+  border-top-color: #1e4976;
+}

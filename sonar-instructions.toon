@@ -1,0 +1,53 @@
+--- sonar_quality_rules
+rule_name | applies_to | pattern | action | exception | priority
+readonly_members | All | Non-reassigned properties | Add readonly | Local variables | critical
+unused_imports | All | Unimported symbols | Remove import | Active features | critical
+lifecycle_interfaces | Components | OnInit without ngOnInit | Remove interface | Actual implementation | high
+mock_services | Tests | Test mock objects | Add readonly | Variable scope | high
+subscriptions | Components | Subscription objects | Add readonly | Reassigned ones | high
+service_injections | All | Dependency injection | Add readonly | Mutable services | high
+config_constants | All | Config values | Add readonly | Dynamic configs | medium
+
+--- readonly_members_patterns
+pattern_type | pattern | incorrect_example | correct_example | applies_to | verification
+Subscriptions | private subscription | private subscription = new Sub() | private readonly subscription = new Sub() | Services/Components | Never reassigned
+Mock_Services | private mockService | let mockService = spy() | let readonly mockService = spy() | Tests | Only in class properties
+Component_Refs | private component | let component = comp | private readonly component = comp | Tests | Component class only
+Configurations | private config | private config = {} | private readonly config = {} | Services | Static configs
+Injected_Services | private service | constructor(service) | constructor(private readonly service) | All | Dependency injection
+Form_Controls | private control | private form = new FC() | private readonly form = new FC() | Components | If not form.reset()
+
+--- lifecycle_interface_rules
+interface | method_required | must_implement | import_when | remove_when | example
+OnInit | ngOnInit() | Implementation required | Used | Not implemented | implements OnInit { ngOnInit() {} }
+OnDestroy | ngOnDestroy() | Implementation required | Used | Not implemented | implements OnDestroy { ngOnDestroy() {} }
+AfterViewInit | ngAfterViewInit() | Implementation required | Used | Not implemented | implements AfterViewInit { ngAfterViewInit() {} }
+OnChanges | ngOnChanges() | Implementation required | Used | Not implemented | implements OnChanges { ngOnChanges() {} }
+DoCheck | ngDoCheck() | Implementation required | Used | Not implemented | implements DoCheck { ngDoCheck() {} }
+
+--- import_cleanup_checklist
+check | verification | action_if_true | action_if_false | priority
+OnInit_Present | ngOnInit() method exists | Keep OnInit import | Remove OnInit import | high
+OnDestroy_Present | ngOnDestroy() method exists | Keep OnDestroy import | Remove OnDestroy import | high
+Service_Injected | Service in constructor | Keep service import | Remove service import | high
+Interface_Used | Interface referenced in code | Keep interface import | Remove interface import | high
+Utility_Used | Utility function called | Keep import | Remove import | high
+Type_Used | Type in annotations | Keep import | Remove import | medium
+
+--- automatic_application_triggers
+trigger_event | check_type | applies_to | action | validation
+File_Created | Full scan | New TypeScript file | Apply all rules | All checks pass
+File_Modified | Incremental | Existing file | Check changed section | Target section clean
+Test_Created | Test specific | *.spec.ts file | Apply test patterns | Test structure valid
+Component_Created | Component specific | *.component.ts | Apply component rules | Component valid
+Service_Created | Service specific | *.service.ts | Apply service rules | Service valid
+Lint_Run | Comprehensive | All TypeScript | Full analysis | No violations
+
+--- validation_before_completion
+validation | check | tool | pass_criteria | priority
+All_Properties | readonly check | sonarqube | Non-reassigned = readonly | critical
+No_Unused_Imports | Import scan | eslint | All imports used | critical
+Lifecycle_Correct | Interface check | tsc | Implemented if imported | high
+No_Syntax_Errors | Compilation | typescript | Code compiles | critical
+Types_Correct | Type check | typescript | No type errors | critical
+Tests_Pass | Execution | karma | All tests pass | high

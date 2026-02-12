@@ -1,0 +1,43 @@
+--- conventional_commits_structure
+element | definition | example | semantic_version_impact | required
+type | Commit category | feat, fix, docs | Determines version bump | true
+scope | Context/module | parser, api, ui | Additional context | false
+description | Brief summary | add ability to parse arrays | Explains change | true
+body | Detailed explanation | Multiline explanation | Additional details | false
+footer | References/breaks | BREAKING CHANGE, Refs #123 | Issue tracking | false
+
+--- commit_types_reference
+type | purpose | semver_impact | angular_convention | example
+fix | Patches a bug | PATCH | Included | fix: prevent racing of requests
+feat | New feature | MINOR | Included | feat: allow config extension
+BREAKING CHANGE | API breaking change | MAJOR | Special | feat!: breaking api change
+docs | Documentation updates | NONE | Included | docs: correct spelling
+style | Code formatting | NONE | Included | style: remove unused semicolons
+refactor | Code restructure | NONE | Included | refactor: simplify logic
+perf | Performance improvement | PATCH | Included | perf: optimize query
+test | Add/update tests | NONE | Included | test: add edge cases
+chore | Build/deps/config | NONE | Included | chore: update dependencies
+ci | CI/CD configuration | NONE | Included | ci: update pipeline
+build | Build system changes | NONE | Included | build: update webpack
+
+--- commit_format_examples
+format | example | description | breaking_change
+basic | feat: add new feature | Type and description only | No
+with_scope | feat(api): add endpoint | Type, scope, and description | No
+multiline | feat: add feature\n\nDetailed explanation | Type, description, body | No
+breaking_change | feat!: breaking api | Type with ! for breaking change | Yes
+footer_reference | fix: bug\n\nRefs #123 | Type with footer reference | No
+full_example | feat(api)!: breaking change\n\nDetails...\n\nBREAKING CHANGE: description | Complete format | Yes
+
+--- common_patterns
+pattern | type | scope_example | description | example
+new_feature | feat | api, ui, auth | Introduces functionality | feat(auth): add oauth2
+bug_fix | fix | button, form, service | Fixes existing issue | fix(form): correct validation
+code_quality | refactor | utils, services | Improves without changing behavior | refactor(utils): simplify logic
+performance | perf | api, rendering | Improves speed/efficiency | perf(api): cache responses
+documentation | docs | readme, api-docs | Updates documentation | docs(readme): add examples
+testing | test | coverage, e2e | Adds/updates tests | test(coverage): improve service
+maintenance | chore | deps, config | Maintenance tasks | chore(deps): bump versions
+ci_updates | ci | pipeline, github | CI/CD changes | ci(github): add lint step
+styling | style | formatting, prettier | Code style fixes | style: apply prettier
+dependency | build | webpack, babel | Build dependency updates | build(webpack): update config

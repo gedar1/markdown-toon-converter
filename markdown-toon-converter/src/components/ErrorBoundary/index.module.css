@@ -1,0 +1,107 @@
+.errorBoundary {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background-color: var(--color-background);
+}
+
+.errorBoundaryContent {
+  max-width: 600px;
+  text-align: center;
+  background-color: var(--color-surface);
+  padding: 3rem 2rem;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--color-border);
+}
+
+.errorBoundaryIcon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.errorBoundaryContent h1 {
+  margin: 0 0 1rem 0;
+  font-size: 2rem;
+  color: var(--color-text);
+}
+
+.errorBoundaryMessage {
+  margin: 0 0 2rem 0;
+  color: var(--color-text-secondary);
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.errorBoundaryDetails {
+  text-align: left;
+  margin: 2rem 0;
+  padding: 1rem;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  border: 1px solid var(--color-border);
+}
+
+.errorBoundaryDetails summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--color-text);
+  padding: 0.5rem;
+  user-select: none;
+}
+
+.errorBoundaryDetails summary:hover {
+  color: var(--color-primary);
+}
+
+.errorBoundaryStack {
+  margin-top: 1rem;
+  padding: 1rem;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+  overflow-x: auto;
+}
+
+.errorBoundaryStack pre {
+  margin: 0.5rem 0 0 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.errorBoundaryActions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.errorBoundaryButton {
+  min-height: var(--min-touch-target);
+  padding: 0.75rem 2rem;
+  border: none;
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.errorBoundaryButtonPrimary {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+.errorBoundaryButtonPrimary:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.errorBoundaryButtonSecondary {
+  background-color: var(--color-border);
+  color: var(--color-text);
+}
+
+.errorBoundaryButtonSecondary:hover {
+  background-color: #4a4a4a;
+}

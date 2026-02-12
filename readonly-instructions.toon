@@ -1,0 +1,73 @@
+--- readonly_rules_scope
+scope | target | apply_readonly | dont_apply_readonly | reasoning | priority
+Class_Properties | Component/Service members | Yes | N/A | Single assignment pattern | critical
+Local_Variables | Within functions/methods | No | Yes | Variable scope and reassignment | high
+Test_Variables | let/const in spec files | No | Yes | Test fixture scope | high
+Constructor_Parameters | DI parameters | Yes | N/A | Dependency pattern | critical
+Function_Parameters | Method arguments | No | Yes | Parameter scope | high
+Loop_Variables | for/while loop vars | No | Yes | Loop iteration | low
+
+--- readonly_applicable_patterns
+pattern_type | applies | example_correct | example_incorrect | detection | priority
+Subscription_Services | Yes | private readonly subscription = new Sub() | private subscription = new Sub() | Single init, never reassigned | critical
+Subscription_Components | Yes | private readonly destroySubject = new Subject() | private destroySubject = new Subject() | Single init in constructor | critical
+Mock_Objects_Class | Yes | private readonly mockService: jasmine.SpyObj | N/A | Class property only | high
+Config_Static | Yes | private readonly defaultOptions = { page: 1 } | private defaultOptions = { page: 1 } | Static configuration | critical
+Base_API_URLs | Yes | private readonly baseUrl = 'https://api.x' | private baseUrl = 'https://api.x' | Static URL | critical
+Service_Injections | Yes | constructor(private readonly authService) | constructor(private authService) | DI dependency | critical
+Component_Reference_Class | Yes | private readonly component: Component | N/A | Test class property only | high
+
+--- readonly_non_applicable_patterns
+pattern_type | applies | example | reason | reassignment | priority
+Dynamic_State | No | private isLoading = false | Changes in methods | .next(), assignment calls | high
+Form_Controls | No | private form = new FormControl() | Updates dynamically | form.reset(), form.setValue() | high
+User_Data | No | private userData: User | Updated on fetch | Assignment in method | high
+Current_Page | No | private currentPage = 1 | Changes on navigation | Incremented/reassigned | high
+Selected_Item | No | private selectedItem: Item | User selection changes | Reassigned on selection | high
+Test_Variables | No | let component: ComponentName | Test variable scope | Used across methods | high
+Local_Variables | No | const data = getData() | Function scope | Used within function | medium
+Loop_Variables | No | for (const item of array) | Iteration scope | Loop iterator | low
+
+--- detection_process_readonly
+step | check | method | passes_if | fails_if | action
+1 | Is_Class_Property | Check scope (private/public) | Declared in class | Inside function/method | Skip (not applicable)
+2 | Single_Assignment | Check initialization only | Set once in declaration/constructor | Multiple assignments | Skip (apply readonly)
+3 | Reassignment_Check | grep for reassignments | No reassignments found | Found reassignments (=) | Skip readonly (dynamic)
+4 | Usage_Pattern | Check usage context | Read-only reference | Modified/updated value | Skip (not applicable)
+5 | Type_Check | Verify type | Object, value, or reference | N/A | Continue
+6 | Apply_Readonly | Add readonly keyword | Code: private readonly x = ... | N/A | Done
+
+--- readonly_validation_checklist
+validation | check_type | expected_result | failure_condition | priority | command
+Syntax_Valid | TypeScript compilation | tsc succeeds | tsc error | critical | tsc --noEmit
+No_Type_Errors | Type checking | No type issues | Type mismatch errors | critical | tsc --strict
+Code_Compiles | Build validation | Build succeeds | Build fails | critical | npm run build
+Tests_Pass | Test execution | All tests pass | Test failures | high | npm test
+Linter_Clean | ESLint check | No lint errors | Lint violations | high | npm run lint
+Readonly_Applied | Property check | readonly keyword present | Missing readonly | critical | grep readonly
+
+--- common_components_patterns
+component_type | typical_properties | readonly_application | example_code | priority
+Service_Class | subscriptions, configs | Apply to all | private readonly subscription = ... | critical
+Component_Class | subscriptions, refs, state_vars | Apply only subscriptions | private readonly subscription = ... | high
+Test_Fixture | let component, fixture, spy | NOT in test vars | let component: Component (NO readonly) | critical
+Repository | entities, queries | Apply to all | private readonly query = ... | high
+HTTP_Client | baseUrl, timeout | Apply to all | private readonly baseUrl = ... | critical
+
+--- reassignment_indicators
+indicator | pattern | example | means_NOT_readonly | means_readonly | priority
+Assignment_Op | = operator | x = newValue | Yes | No | critical
+Increment_Op | ++/-- | counter++ | Yes | No | high
+Compound_Op | +=, -=, *=, /= | value += 10 | Yes | No | high
+Method_Call | .next(), .setValue() | subject.next(val) | Yes | No | critical
+Parameter_Binding | [prop]="var" | setter called indirectly | Maybe | Maybe | medium
+Property_Setter | obj.prop = val | Called elsewhere | Yes | No | high
+
+--- special_cases_readonly
+case | context | applicable | reasoning | example | priority
+Constructor_Body | Only in init | Yes | If only assigned in constructor | this.x = param | critical
+ngOnInit_Assignment | Angular lifecycle | No | Can be called multiple times | Technically reassignable | high
+Observable_Complete | Subject/Observable | Yes | Subject itself not reassigned | private readonly subject = new Subject() | critical
+Array_Mutations | Array methods | Yes | Array reference doesn't change | readonly array (push OK) | high
+Object_Mutations | Object property changes | Yes | Object reference doesn't change | readonly config (property update OK) | high
+Template_Binding | Angular template | No | Binding doesn't change reference | [value]="prop" binding context | medium
