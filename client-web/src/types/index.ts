@@ -45,7 +45,11 @@ export interface RegisterRequest {
   email: string;
   password: string;
   userType: UserType;
-  displayName: string;
+  profile: {
+    displayName: string;
+    bio: string | null;
+    avatarUrl: string | null;
+  };
 }
 
 export interface AuthResponse {

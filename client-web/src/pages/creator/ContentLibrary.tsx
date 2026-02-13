@@ -21,7 +21,9 @@ export function ContentLibrary() {
   const loadContent = async () => {
     try {
       setIsLoading(true);
-      const data = await contentService.getCreatorLibrary(creatorProfile.id);
+      // Use userId instead of id
+      const userId = creatorProfile.userId || creatorProfile.id;
+      const data = await contentService.getCreatorLibrary(userId);
       setContent(data);
     } catch (err) {
       setError(getErrorMessage(err));
@@ -197,7 +199,9 @@ export function ContentLibrary() {
                             </p>
                           )}
                           <div className="mt-1 flex items-center space-x-4 text-xs text-gray-500">
-                            <span>{item.format.toUpperCase()}</span>
+                            <span>
+                              {item.format ? item.format.toUpperCase() : "N/A"}
+                            </span>
                             <span>•</span>
                             <span>{formatFileSize(item.fileSize)}</span>
                             <span>•</span>

@@ -97,9 +97,11 @@ export function CreatorDashboard() {
 
     try {
       setIsLoading(true);
+      // Use userId instead of id
+      const userId = creatorProfile.userId || creatorProfile.id;
       const [contentData, analyticsData] = await Promise.all([
-        contentService.getCreatorLibrary(creatorProfile.id),
-        streamingService.getCreatorAnalytics(creatorProfile.id),
+        contentService.getCreatorLibrary(userId),
+        streamingService.getCreatorAnalytics(userId),
       ]);
       setContent(contentData);
       setAnalytics(analyticsData);
@@ -232,7 +234,8 @@ export function CreatorDashboard() {
                   <div className="flex-1">
                     <h3 className="font-medium text-gray-900">{item.title}</h3>
                     <p className="text-sm text-gray-500">
-                      {item.playCount} plays • {item.format.toUpperCase()}
+                      {item.playCount} plays
+                      {item.format ? ` • ${item.format.toUpperCase()}` : ""}
                     </p>
                   </div>
                   <div className="text-right">

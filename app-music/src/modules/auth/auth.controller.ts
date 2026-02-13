@@ -15,8 +15,8 @@ const registerSchema = z.object({
   userType: z.enum(['creator', 'subscriber']),
   profile: z.object({
     displayName: commonSchemas.displayName,
-    bio: commonSchemas.bio,
-    avatarUrl: commonSchemas.url,
+    bio: z.string().max(500, 'Bio must be less than 500 characters').nullable().optional(),
+    avatarUrl: z.string().url('Invalid URL format').nullable().optional(),
   }),
 });
 
@@ -52,8 +52,8 @@ export class AuthController {
       userType: data.userType as UserType,
       profile: {
         displayName: data.profile.displayName,
-        bio: data.profile.bio,
-        avatarUrl: data.profile.avatarUrl,
+        bio: data.profile.bio ?? undefined,
+        avatarUrl: data.profile.avatarUrl ?? undefined,
       },
     });
 
@@ -83,7 +83,7 @@ export class AuthController {
     });
 
     logger.info('User logged in via API', {
-      userId: result.userId,
+      userId: result.user.id,
     });
 
     res.status(200).json({

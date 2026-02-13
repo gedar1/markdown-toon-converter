@@ -167,7 +167,7 @@ export function GoLive() {
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 bg-white text-gray-900 border rounded-lg focus:ring-2 focus:ring-blue-500"
                 placeholder="Mi Set en Vivo"
                 required
               />
@@ -180,7 +180,7 @@ export function GoLive() {
               <textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 bg-white border text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-500"
                 rows={3}
                 placeholder="Describe tu transmisión..."
               />
@@ -243,7 +243,7 @@ export function GoLive() {
                   type="text"
                   value={createdStream.rtmpUrl}
                   readOnly
-                  className="flex-1 px-4 py-2 border rounded-lg bg-gray-50"
+                  className="flex-1 px-4 py-2 border text-zinc-800 rounded-lg bg-gray-50"
                 />
                 <button
                   onClick={() => copyToClipboard(createdStream.rtmpUrl)}
@@ -263,7 +263,7 @@ export function GoLive() {
                   type={showStreamKey ? "text" : "password"}
                   value={createdStream.streamKey}
                   readOnly
-                  className="flex-1 px-4 py-2 border rounded-lg bg-gray-50"
+                  className="flex-1 px-4 py-2 text-zinc-800 border rounded-lg bg-gray-50"
                 />
                 <button
                   onClick={() => setShowStreamKey(!showStreamKey)}
@@ -280,7 +280,7 @@ export function GoLive() {
               </div>
             </div>
 
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-6">
+            <div className="bg-blue-50 font text-zinc-800 border-blue-200 rounded-lg p-4 mt-6">
               <h3 className="font-semibold mb-2">
                 Configuración de OBS Studio
               </h3>

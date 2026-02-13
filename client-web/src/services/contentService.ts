@@ -59,7 +59,7 @@ export const contentService = {
    */
   async getCreatorLibrary(creatorId: string): Promise<Content[]> {
     const response = await api.get<ApiResponse<Content[]>>(
-      `/creators/${creatorId}/library`,
+      `/content/creator/${creatorId}`,
     );
     return response.data.data;
   },
@@ -72,7 +72,10 @@ export const contentService = {
     description?: string;
     isPublic?: boolean;
   }): Promise<Playlist> {
-    const response = await api.post<ApiResponse<Playlist>>("/playlists", data);
+    const response = await api.post<ApiResponse<Playlist>>(
+      "/content/playlists",
+      data,
+    );
     return response.data.data;
   },
 
@@ -84,7 +87,7 @@ export const contentService = {
   ): Promise<Playlist & { content: Content[] }> {
     const response = await api.get<
       ApiResponse<Playlist & { content: Content[] }>
-    >(`/playlists/${playlistId}`);
+    >(`/content/playlists/${playlistId}`);
     return response.data.data;
   },
 
@@ -96,7 +99,7 @@ export const contentService = {
     data: Partial<Playlist>,
   ): Promise<Playlist> {
     const response = await api.put<ApiResponse<Playlist>>(
-      `/playlists/${playlistId}`,
+      `/content/playlists/${playlistId}`,
       data,
     );
     return response.data.data;
@@ -106,7 +109,7 @@ export const contentService = {
    * Delete playlist
    */
   async deletePlaylist(playlistId: string): Promise<void> {
-    await api.delete(`/playlists/${playlistId}`);
+    await api.delete(`/content/playlists/${playlistId}`);
   },
 
   /**
@@ -114,7 +117,7 @@ export const contentService = {
    */
   async getCreatorPlaylists(creatorId: string): Promise<Playlist[]> {
     const response = await api.get<ApiResponse<Playlist[]>>(
-      `/creators/${creatorId}/playlists`,
+      `/content/playlists/creator/${creatorId}`,
     );
     return response.data.data;
   },
@@ -126,7 +129,7 @@ export const contentService = {
     playlistId: string,
     contentId: string,
   ): Promise<void> {
-    await api.post(`/playlists/${playlistId}/content`, { contentId });
+    await api.post(`/content/playlists/${playlistId}/content`, { contentId });
   },
 
   /**
@@ -136,6 +139,6 @@ export const contentService = {
     playlistId: string,
     contentId: string,
   ): Promise<void> {
-    await api.delete(`/playlists/${playlistId}/content/${contentId}`);
+    await api.delete(`/content/playlists/${playlistId}/content/${contentId}`);
   },
 };

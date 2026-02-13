@@ -14,13 +14,7 @@ import {
 } from '../../shared/errors/AppError';
 import { validateEmail, validatePassword } from '../../shared/utils/validation';
 import { logger } from '../../shared/utils/logger';
-import {
-  UserCredentials,
-  LoginCredentials,
-  AuthToken,
-  AuthResult,
-  TokenValidation,
-} from './auth.types';
+import { UserCredentials, LoginCredentials, AuthResult, TokenValidation } from './auth.types';
 
 export class AuthService {
   /**
@@ -59,7 +53,7 @@ export class AuthService {
     const passwordHash = await hashPassword(password);
 
     // Create user with profile in a transaction
-    const user = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+    const result = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       // Create user
       const newUser = await tx.user.create({
         data: {
@@ -73,34 +67,35 @@ export class AuthService {
       });
 
       // Create type-specific profile
+      let userProfile;
       if (userType === 'creator') {
-        await tx.creatorProfile.create({
+        userProfile = await tx.creatorProfile.create({
           data: {
             userId: newUser.id,
           },
         });
       } else {
-        await tx.subscriberProfile.create({
+        userProfile = await tx.subscriberProfile.create({
           data: {
             userId: newUser.id,
           },
         });
       }
 
-      return newUser;
+      return { user: newUser, profile: userProfile };
     });
 
     logger.info('User registered successfully', {
-      userId: user.id,
-      email: user.email,
-      userType: user.userType,
+      userId: result.user.id,
+      email: result.user.email,
+      userType: result.user.userType,
     });
 
     // Generate JWT token
     const token = generateToken({
-      userId: user.id,
-      userType: user.userType,
-      email: user.email,
+      userId: result.user.id,
+      userType: result.user.userType,
+      email: result.user.email,
     });
 
     const expiresAt = new Date();
@@ -110,13 +105,20 @@ export class AuthService {
       token,
       expiresAt,
       user: {
-        id: user.id,
-        email: user.email,
-        userType: user.userType,
-        displayName: user.displayName,
-        bio: user.bio,
-        avatarUrl: user.avatarUrl,
-        createdAt: user.createdAt,
+        id: result.user.id,
+        email: result.user.email,
+        userType: result.user.userType,
+        displayName: result.user.displayName,
+        bio: result.user.bio,
+        avatarUrl: result.user.avatarUrl,
+        createdAt: result.user.createdAt,
+      },
+      profile: {
+        ...result.profile,
+        userId: result.user.id,
+        displayName: result.user.displayName,
+        bio: result.user.bio,
+        avatarUrl: result.user.avatarUrl,
       },
     };
   }
@@ -124,7 +126,7 @@ export class AuthService {
   /**
    * Login user
    */
-  async login(credentials: LoginCredentials): Promise<AuthToken> {
+  async login(credentials: LoginCredentials): Promise<AuthResult> {
     const { email, password } = credentials;
 
     // Validate email format
@@ -153,6 +155,22 @@ export class AuthService {
       throw new AuthenticationError('Invalid email or password');
     }
 
+    // Get user profile
+    let userProfile;
+    if (user.userType === 'creator') {
+      userProfile = await prisma.creatorProfile.findUnique({
+        where: { userId: user.id },
+      });
+    } else {
+      userProfile = await prisma.subscriberProfile.findUnique({
+        where: { userId: user.id },
+      });
+    }
+
+    if (!userProfile) {
+      throw new AuthenticationError('User profile not found');
+    }
+
     logger.info('User logged in successfully', {
       userId: user.id,
       email: user.email,
@@ -171,8 +189,22 @@ export class AuthService {
     return {
       token,
       expiresAt,
-      userId: user.id,
-      userType: user.userType,
+      user: {
+        id: user.id,
+        email: user.email,
+        userType: user.userType,
+        displayName: user.displayName,
+        bio: user.bio,
+        avatarUrl: user.avatarUrl,
+        createdAt: user.createdAt,
+      },
+      profile: {
+        ...userProfile,
+        userId: user.id,
+        displayName: user.displayName,
+        bio: user.bio,
+        avatarUrl: user.avatarUrl,
+      },
     };
   }
 

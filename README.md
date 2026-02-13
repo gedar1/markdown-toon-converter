@@ -1,212 +1,330 @@
-# 📊 TOON Data Files - PCO Web Portal Front
+# Music Streaming Platform
 
-Este directorio contiene archivos en formato **TOON** (Token-Oriented Object Notation) que optimizan las instrucciones del proyecto para usar con Copilot y LLMs.
+Plataforma de streaming de música con transmisiones en vivo para DJs y creators.
 
-## 📁 Estructura de Archivos
+## 🎯 Características
 
-### Archivos TOON (Optimizados)
+### Para Creators
 
-Todos los archivos `.toon` en esta carpeta son versiones optimizadas de los archivos `.md` originales ubicados en `.github/instructions/`.
+- 📤 Subir contenido de audio (MP3, WAV, FLAC)
+- 🔴 Transmisiones en vivo con OBS Studio
+- 📊 Dashboard con estadísticas
+- 👥 Gestión de subscribers
+- 💰 Sistema de códigos de acceso
 
-```
-data/
-├── INDEX.toon                          # Índice completo de todos los archivos TOON
-├── commit-instructions.toon            # Conventional Commits formato y tipos
-├── coverage-instructions.toon          # Estrategia de cobertura de tests (87%)
-├── doc-instructions.toon               # Generación de documentación
-├── pr-auto-fill-instructions.toon     # Proceso automático de Pull Requests
-├── qa-instructions.toon                # Resumen QA y casos de prueba
-├── sonar-instructions.toon             # Reglas de calidad SonarQube
-├── test-quality-instructions.toon     # Estándares de calidad de tests
-├── clean-imports-instructions.toon    # Limpieza de imports no utilizados
-├── readonly-instructions.toon          # Reglas de readonly members
-└── tests-structure.toon               # Estructura de archivos de test
-```
+### Para Subscribers
 
-## 🎯 Qué es TOON
+- 🔍 Descubrir creators
+- 🎵 Reproducir contenido con HLS
+- 🔴 Ver transmisiones en vivo
+- 🎫 Canjear códigos de acceso
+- 📱 Interfaz responsive
 
-**TOON** es un formato de serialización diseñado para:
-
-- ✅ **Reducir tokens en 60-80%** respecto a JSON/Markdown
-- ✅ **Mantener legibilidad** con estructura tabular
-- ✅ **Facilitar parsing** automático
-- ✅ **Reducir costos de API** en LLMs
-
-### Ejemplo: Commit Instructions
-
-**MARKDOWN (Original)**
-
-```markdown
-# Conventional Commits 1.0.0
-
-## Commit Types
-
-- fix: a commit of the type fix patches a bug...
-- feat: a commit of the type feat introduces...
-  ...
-```
-
-**TOON (Optimizado)**
-
-```toon
---- commit_types_reference
-type | purpose | semver_impact | example
-fix | Patches a bug | PATCH | fix: prevent racing of requests
-feat | New feature | MINOR | feat: allow config extension
-```
-
-**Ahorro: 72% menos tokens**
-
----
-
-## 📖 Cómo Usar los Archivos TOON
-
-### 1. **Directamente en Prompts a Copilot**
+## 🏗️ Arquitectura
 
 ```
-Usa esta estructura TOON para entender:
-
---- test_files
-file | type | module | coverage | priority
-http-session-wrappers.spec.ts | utility | utils | pending | high
-functions.spec.ts | utility | functions | pending | high
+music-streaming-platform/
+├── app-music/          # Backend (Node.js + Express + Prisma)
+├── client-web/         # Frontend (React + TypeScript + Vite)
+├── docker-compose.yml  # PostgreSQL con Docker
+└── README.md
 ```
 
-### 2. **En Instrucciones Automáticas**
+## 🚀 Quick Start
 
-Copilot leerá automáticamente estos archivos cuando detecte palabras clave:
+### Requisitos
 
-- `"commit"` → Lee `commit-instructions.toon`
-- `"coverage"` → Lee `coverage-instructions.toon`
-- `"test"` → Lee `test-quality-instructions.toon`
-- `"sonar"` → Lee `sonar-instructions.toon`
-- `"doc"` → Lee `doc-instructions.toon`
-- `"qa"` → Lee `qa-instructions.toon`
-- `"pr"` → Lee `pr-auto-fill-instructions.toon`
-- `"clean imports"` → Lee `clean-imports-instructions.toon`
-- `"readonly"` → Lee `readonly-instructions.toon`
+- Node.js 18+ y npm
+- Docker Desktop (para PostgreSQL)
+- Git
 
-### 3. **Referencia Manual**
+### 1. Clonar el repositorio
 
-Abre cualquier archivo `.toon` para entender la estructura de datos del proyecto.
-
----
-
-## 📊 Sintaxis TOON - Referencia Rápida
-
-### Estructura Básica
-
-```toon
---- table_name
-column1 | column2 | column3
-value1 | value2 | value3
-value1 | value2 | value3
+```bash
+git clone <repository-url>
+cd music-streaming-platform
 ```
 
-### Tipos de Datos
+### 2. Instalar dependencias
 
-| Tipo      | Ejemplo          | Uso                  |
-| --------- | ---------------- | -------------------- |
-| String    | `John`           | Valores de texto     |
-| Number    | `25`             | Números sin comillas |
-| Boolean   | `true` / `false` | Valores booleanos    |
-| Null      | `null`           | Valores nulos        |
-| Reference | `file.ts`        | Rutas de archivos    |
+```bash
+# Backend
+cd app-music
+npm install
 
-### Ejemplo Completo
-
-```toon
---- employees
-id | name | department | active
-1 | Alice | Engineering | true
-2 | Bob | Sales | false
-3 | Charlie | HR | true
+# Frontend
+cd ../client-web
+npm install
 ```
 
----
+### 3. Configurar PostgreSQL con Docker
 
-## ✅ Verificación de Archivos
+**Opción A: Script automático (Windows)**
 
-Todos los archivos TOON han sido validados:
+```bash
+# Desde la raíz del proyecto
+setup-db.bat
+```
 
-- ✅ Estructura sintáctica correcta
-- ✅ Completitud de datos (100%)
-- ✅ Mapeo correcto con MD originales
-- ✅ Ahorro de tokens verificado (60-77%)
+**Opción B: Manual**
 
----
+```bash
+# Iniciar PostgreSQL
+docker-compose up -d
 
-## 🔄 Sincronización MD ↔ TOON
+# Esperar 5 segundos
 
-**Los archivos MD originales se mantienen intactos** en `.github/instructions/` para referencia humana.
+# Ejecutar migraciones
+cd app-music
+npm run prisma:migrate
+```
 
-Los archivos TOON son **complementarios**, no reemplazan a los MD.
+Ver [DOCKER_SETUP.md](./DOCKER_SETUP.md) para más detalles.
 
-### Archivos Relacionados
+### 4. Iniciar la aplicación
 
-| TOON File                       | MD Original                      | Ubicación                        |
-| ------------------------------- | -------------------------------- | -------------------------------- |
-| commit-instructions.toon        | commit.instructions.md           | `.github/instructions/commit/`   |
-| coverage-instructions.toon      | coverage.instructions.md         | `.github/instructions/coverage/` |
-| doc-instructions.toon           | doc.instructions.md              | `.github/instructions/doc/`      |
-| pr-auto-fill-instructions.toon  | pr-auto-fill.instructions.md     | `.github/instructions/pr/`       |
-| qa-instructions.toon            | qa-hu.instructions.md            | `.github/instructions/qa/`       |
-| sonar-instructions.toon         | sonar-quality.instructions.md    | `.github/instructions/sonar/`    |
-| test-quality-instructions.toon  | test-quality.instructions.md     | `.github/instructions/sonar/`    |
-| clean-imports-instructions.toon | clean-imports.instructions.md    | `.github/instructions/sonar/`    |
-| readonly-instructions.toon      | readonly-members.instructions.md | `.github/instructions/sonar/`    |
+**Terminal 1 - Backend:**
 
----
+```bash
+cd app-music
+npm run dev
+```
 
-## 💡 Casos de Uso Recomendados
+**Terminal 2 - Frontend:**
 
-### ✅ Usar TOON
+```bash
+cd client-web
+npm run dev
+```
 
-- Llamadas a APIs de Copilot/Claude
-- Análisis automatizado de datos
-- Integración en scripts de CI/CD
-- Transmisión de datos a LLMs
-- Reducir costos de tokens
+### 5. Abrir en el navegador
 
-### ✅ Usar MD
+- Frontend: http://localhost:5173
+- Backend API: http://localhost:3000
+- Prisma Studio: http://localhost:5555 (ejecutar `npm run prisma:studio`)
 
-- Lectura humana y referencia
-- Documentación de proyecto
-- Onboarding de nuevos miembros
-- Comunicación en equipo
-- Archivos de ayuda
+## 🔧 Configuración
 
----
+### Variables de Entorno
 
-## 📈 Beneficios Medidos
+**Backend (`app-music/.env`):**
 
-| Métrica   | Reducción | Economía Anual |
-| --------- | --------- | -------------- |
-| Tokens    | 72%       | ~40M tokens    |
-| Tamaño    | 74%       | ~1.2GB/año     |
-| Costo API | 72%       | ~$850/año      |
-| Velocidad | 73%       | ~8 horas/mes   |
+```env
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/music_streaming_platform
+JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
+PORT=3000
+CORS_ORIGIN=http://localhost:5173
+```
 
----
+**Frontend (`client-web/.env`):**
 
-## 🚀 Próximos Pasos
+```env
+VITE_API_URL=http://localhost:3000
+VITE_DEV_MODE=false
+```
 
-1. **Integrar en CI/CD**: Usar TOON files en pipelines
-2. **Automatizar Parsing**: Crear parsers que lean estos archivos
-3. **Expandir Cobertura**: Convertir más documentación a TOON
-4. **Monitorear Ahorro**: Trackear reducción de costos de API
+## 🧪 Modo Desarrollo (Frontend sin Backend)
 
----
+Para probar la UI sin necesidad de backend:
 
-## 📝 Notas
+```env
+# client-web/.env
+VITE_DEV_MODE=true
+VITE_DEV_USER_TYPE=creator  # o subscriber
+```
 
-- Los archivos TOON se crean **sin reemplazar** los MD originales
-- Compatible con cualquier herramienta que pueda leer texto tabular
-- Formato de código abierto con implementaciones en múltiples lenguajes
-- Optimizado específicamente para LLMs y procesamiento automatizado
+Ver [client-web/DEV_MODE.md](./client-web/DEV_MODE.md) para más detalles.
 
----
+## 📚 Documentación
 
-**Última actualización**: 2026-01-30  
-**Autor**: GitHub Copilot  
-**Versión**: 1.0
+- [Docker Setup](./DOCKER_SETUP.md) - Configuración de PostgreSQL
+- [Backend README](./app-music/README.md) - Documentación del backend
+- [Frontend README](./client-web/README.md) - Documentación del frontend
+- [Live Streaming](./client-web/LIVE_STREAMING.md) - Módulo de transmisiones en vivo
+- [Dev Mode](./client-web/DEV_MODE.md) - Modo desarrollo sin backend
+- [Mock Data](./client-web/MOCK_DATA_SUMMARY.md) - Datos de prueba
+
+## 🗄️ Base de Datos
+
+### Modelos Principales
+
+- **User** - Usuarios (creators y subscribers)
+- **CreatorProfile** - Perfil de creator
+- **SubscriberProfile** - Perfil de subscriber
+- **Content** - Contenido de audio
+- **Playlist** - Listas de reproducción
+- **AccessCode** - Códigos de acceso
+- **AccessGrant** - Permisos de acceso
+- **StreamSession** - Sesiones de streaming
+- **LiveStream** - Transmisiones en vivo
+- **StreamViewer** - Viewers de transmisiones
+
+### Gestión de Base de Datos
+
+```bash
+# Ver datos en Prisma Studio
+cd app-music
+npm run prisma:studio
+
+# Crear nueva migración
+npm run prisma:migrate
+
+# Generar cliente de Prisma
+npm run prisma:generate
+
+# Resetear base de datos
+docker-compose down -v
+docker-compose up -d
+npm run prisma:migrate
+```
+
+## 🔴 Live Streaming
+
+### Para Creators
+
+1. Ir a `/creator/live`
+2. Crear una nueva transmisión
+3. Copiar RTMP URL y Stream Key
+4. Configurar OBS Studio:
+   - Settings → Stream
+   - Service: Custom
+   - Server: [RTMP URL]
+   - Stream Key: [Stream Key]
+5. Click "Start Streaming" en OBS
+
+### Para Subscribers
+
+1. Ir a `/live`
+2. Ver transmisiones activas
+3. Click en una transmisión para verla
+4. Requiere código de acceso válido
+
+Ver [app-music/src/modules/live/README.md](./app-music/src/modules/live/README.md) para más detalles.
+
+## 🧪 Testing
+
+```bash
+# Backend tests
+cd app-music
+npm test
+
+# Frontend tests (cuando estén implementados)
+cd client-web
+npm test
+```
+
+## 📦 Build para Producción
+
+### Backend
+
+```bash
+cd app-music
+npm run build
+npm start
+```
+
+### Frontend
+
+```bash
+cd client-web
+npm run build
+npm run preview
+```
+
+## 🛠️ Scripts Útiles
+
+### Backend
+
+```bash
+npm run dev          # Desarrollo con hot-reload
+npm run build        # Compilar TypeScript
+npm start            # Producción
+npm test             # Tests
+npm run lint         # Linter
+npm run prisma:studio # Abrir Prisma Studio
+```
+
+### Frontend
+
+```bash
+npm run dev          # Desarrollo con hot-reload
+npm run build        # Build para producción
+npm run preview      # Preview del build
+npm run lint         # Linter
+```
+
+## 🐛 Troubleshooting
+
+### PostgreSQL no inicia
+
+```bash
+# Ver logs
+docker-compose logs postgres
+
+# Reiniciar
+docker-compose restart
+
+# Recrear desde cero
+docker-compose down -v
+docker-compose up -d
+```
+
+### Puerto 5432 ocupado
+
+Cambiar puerto en `docker-compose.yml`:
+
+```yaml
+ports:
+  - "5433:5432"
+```
+
+Y actualizar `DATABASE_URL` en `.env`.
+
+### Error de migraciones
+
+```bash
+# Resetear y volver a migrar
+cd app-music
+npx prisma migrate reset
+npm run prisma:migrate
+```
+
+### Frontend no conecta con backend
+
+1. Verificar que el backend esté corriendo en puerto 3000
+2. Verificar `VITE_API_URL` en `client-web/.env`
+3. Verificar CORS en `app-music/.env`
+
+## 📝 Próximas Características
+
+- [ ] Chat en vivo para transmisiones
+- [ ] Notificaciones push cuando un creator inicia stream
+- [ ] Sistema de pagos integrado
+- [ ] Grabaciones de transmisiones
+- [ ] DVR (rewind en vivo)
+- [ ] Aplicación móvil (React Native)
+- [ ] Tests end-to-end
+- [ ] CI/CD pipeline
+
+## 🤝 Contribuir
+
+1. Fork el proyecto
+2. Crear una rama (`git checkout -b feature/amazing-feature`)
+3. Commit cambios (`git commit -m 'Add amazing feature'`)
+4. Push a la rama (`git push origin feature/amazing-feature`)
+5. Abrir un Pull Request
+
+## 📄 Licencia
+
+MIT License - ver [LICENSE](LICENSE) para más detalles.
+
+## 👥 Autores
+
+- Tu Nombre - Desarrollo inicial
+
+## 🙏 Agradecimientos
+
+- Prisma por el excelente ORM
+- React y Vite por el desarrollo rápido
+- HLS.js por el reproductor de video
+- Tailwind CSS por los estilos

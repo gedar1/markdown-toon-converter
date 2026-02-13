@@ -52,6 +52,7 @@ export interface AuthResult {
     avatarUrl: string | null;
     createdAt: Date;
   };
+  profile: any; // CreatorProfile or SubscriberProfile
 }
 
 /**

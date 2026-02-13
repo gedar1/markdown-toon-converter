@@ -12,8 +12,8 @@ const uploadContentSchema = z.object({
   title: z.string().min(1, 'Title is required').max(200),
   description: z.string().max(1000).optional(),
   genre: z.string().min(1, 'Genre is required'),
-  duration: commonSchemas.positiveInt,
-  coverArtUrl: commonSchemas.url,
+  duration: commonSchemas.positiveInt.optional(),
+  coverArtUrl: z.string().url('Invalid URL format').nullable().optional(),
   tags: z.array(z.string()).optional(),
 });
 
@@ -76,8 +76,8 @@ export class ContentController {
       title: data.title,
       description: data.description,
       genre: data.genre,
-      duration: data.duration,
-      coverArtUrl: data.coverArtUrl,
+      duration: data.duration ?? 0, // Default to 0 if not provided, can be calculated later
+      coverArtUrl: data.coverArtUrl ?? undefined,
       tags: data.tags,
       file: {
         originalName: req.file.originalname,
