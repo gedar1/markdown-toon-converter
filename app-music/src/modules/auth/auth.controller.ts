@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { authService } from './auth.service';
+import { authService } from '../../application/auth/AuthService';
 import { AuthenticatedRequest } from './auth.middleware';
 import { validateSchema, commonSchemas } from '../../shared/utils/validation';
 import { logger } from '../../shared/utils/logger';
@@ -168,7 +168,11 @@ export class AuthController {
 
     const data = validateSchema(changePasswordSchema, req.body);
 
-    await authService.changePassword(req.user.userId, data.oldPassword, data.newPassword);
+    await authService.changePassword({
+      userId: req.user.userId,
+      oldPassword: data.oldPassword,
+      newPassword: data.newPassword,
+    });
 
     logger.info('Password changed via API', {
       userId: req.user.userId,
@@ -184,16 +188,17 @@ export class AuthController {
   /**
    * Request password reset
    * POST /auth/reset-password
+   * TODO: Implement password reset use case
    */
   async resetPassword(req: AuthenticatedRequest, res: Response): Promise<void> {
     const data = validateSchema(resetPasswordSchema, req.body);
 
-    await authService.resetPassword(data.email);
-
-    logger.info('Password reset requested via API', {
+    // TODO: Implement ResetPassword use case in domain layer
+    logger.info('Password reset requested via API (not implemented)', {
       email: data.email,
     });
 
+    // For now, return success (in production, this would send an email)
     // Always return success to prevent email enumeration
     res.status(200).json({
       status: 'success',

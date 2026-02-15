@@ -210,8 +210,10 @@ export class UsersController {
 
     res.status(200).json({
       status: 'success',
-      data: result.creators,
-      pagination: result.pagination,
+      data: {
+        data: result.creators,
+        pagination: result.pagination,
+      },
       timestamp: new Date().toISOString(),
     });
   }

@@ -115,6 +115,34 @@ class LiveStreamingService {
   }
 
   /**
+   * Get scheduled (upcoming) streams
+   */
+  async getScheduledStreams(): Promise<LiveStream[]> {
+    const now = new Date();
+
+    const streams = await prisma.liveStream.findMany({
+      where: {
+        status: 'scheduled',
+        scheduledFor: {
+          gte: now,
+        },
+      },
+      orderBy: { scheduledFor: 'asc' },
+      include: {
+        creator: {
+          select: {
+            id: true,
+            displayName: true,
+            avatarUrl: true,
+          },
+        },
+      },
+    });
+
+    return streams.map((s) => this.mapStreamToData(s));
+  }
+
+  /**
    * Update live stream
    */
   async updateLiveStream(

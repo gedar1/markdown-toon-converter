@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { accessService } from './access.service';
+import { accessService } from '../../application/access/AccessService';
 import { AuthenticatedRequest } from '../auth/auth.middleware';
 import { validateSchema, commonSchemas } from '../../shared/utils/validation';
 import { logger } from '../../shared/utils/logger';
@@ -225,7 +225,7 @@ export class AccessController {
 
     const { grantId } = req.params;
 
-    await accessService.revokeAccessGrant(grantId, req.user.userId);
+    await accessService.revokeAccessGrant({ grantId, revokedBy: req.user.userId });
 
     logger.info('Access grant revoked via API', {
       grantId,
@@ -259,8 +259,8 @@ export class AccessController {
 
     const accessCode = await accessService.getAccessCode(code);
 
-    // Only allow creator or redeemer to view code details
-    if (req.user.userId !== accessCode.creatorId && req.user.userId !== accessCode.redeemedBy) {
+    // Only allow creator to view code details (codes don't have redeemedBy until redeemed)
+    if (req.user.userId !== accessCode.creatorId) {
       res.status(403).json({
         status: 'error',
         code: 'ACCESS_DENIED',
@@ -273,6 +273,41 @@ export class AccessController {
     res.status(200).json({
       status: 'success',
       data: accessCode,
+      timestamp: new Date().toISOString(),
+    });
+  }
+
+  /**
+   * Get my access grants
+   * GET /access/my-grants
+   * Requires authentication (subscriber)
+   */
+  async getMyAccessGrants(req: AuthenticatedRequest, res: Response): Promise<void> {
+    if (!req.user) {
+      res.status(401).json({
+        status: 'error',
+        code: 'AUTHENTICATION_ERROR',
+        message: 'Authentication required',
+        timestamp: new Date().toISOString(),
+      });
+      return;
+    }
+
+    if (req.user.userType !== 'subscriber') {
+      res.status(403).json({
+        status: 'error',
+        code: 'ACCESS_DENIED',
+        message: 'Only subscribers can view their access grants',
+        timestamp: new Date().toISOString(),
+      });
+      return;
+    }
+
+    const grants = await accessService.getSubscriberAccessGrants(req.user.userId);
+
+    res.status(200).json({
+      status: 'success',
+      data: grants,
       timestamp: new Date().toISOString(),
     });
   }

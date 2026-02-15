@@ -67,6 +67,18 @@ router.get(
 );
 
 /**
+ * @route   GET /access/my-grants
+ * @desc    Get my access grants (current subscriber)
+ * @access  Private (subscriber only)
+ */
+router.get(
+  '/my-grants',
+  authenticate,
+  authorizeSubscriber,
+  asyncHandler(accessController.getMyAccessGrants.bind(accessController))
+);
+
+/**
  * @route   POST /webhooks/payment
  * @desc    Handle payment webhook events
  * @access  Public (but should verify webhook signature)

@@ -17,6 +17,12 @@ router.get(
 );
 
 router.get(
+  '/streams/scheduled',
+  authenticate,
+  liveStreamingController.getScheduledStreams.bind(liveStreamingController)
+);
+
+router.get(
   '/streams/:streamId',
   authenticate,
   liveStreamingController.getStream.bind(liveStreamingController)

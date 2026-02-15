@@ -98,6 +98,23 @@ export class LiveStreamingController {
   }
 
   /**
+   * Get all scheduled (upcoming) streams
+   * GET /live/streams/scheduled
+   */
+  async getScheduledStreams(req: Request, res: Response, next: NextFunction) {
+    try {
+      const streams = await liveStreamingService.getScheduledStreams();
+
+      res.json({
+        status: 'success',
+        data: streams,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
    * Update a live stream
    * PUT /live/streams/:streamId
    */

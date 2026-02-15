@@ -67,22 +67,22 @@ export function Layout({ children }: LayoutProps) {
                   ) : (
                     <>
                       <Link
+                        to="/live"
+                        className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium"
+                      >
+                        🔴 Live Streams
+                      </Link>
+                      <Link
                         to="/discover"
                         className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium"
                       >
                         Discover
                       </Link>
                       <Link
-                        to="/live"
+                        to="/library"
                         className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium"
                       >
-                        🔴 Live
-                      </Link>
-                      <Link
-                        to="/my-access"
-                        className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium"
-                      >
-                        My Access
+                        My Library
                       </Link>
                     </>
                   )}

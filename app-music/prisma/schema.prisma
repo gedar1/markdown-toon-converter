@@ -44,6 +44,7 @@ model User {
   streamSessions     StreamSession[]
   liveStreams        LiveStream[]       @relation("CreatorLiveStreams")
   streamViewers      StreamViewer[]     @relation("StreamViewers")
+  subscriptionPlans  SubscriptionPlan[] @relation("CreatorPlans")
 
   @@index([email])
   @@index([userType])
@@ -273,4 +274,26 @@ model StreamViewer {
   @@index([subscriberId])
   @@index([streamId, subscriberId])
   @@map("stream_viewers")
+}
+
+
+// Subscription Plans
+model SubscriptionPlan {
+  id             String   @id @default(uuid())
+  creatorId      String
+  name           String
+  description    String
+  amount         Int      // Amount in cents
+  currency       String   @default("USD")
+  durationDays   Int      @default(30)
+  stripePriceId  String?  // Stripe Price ID
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  // Relations
+  creator        User     @relation("CreatorPlans", fields: [creatorId], references: [id], onDelete: Cascade)
+
+  @@index([creatorId])
+  @@index([isActive])
 }

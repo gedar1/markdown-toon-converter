@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { contentService } from './content.service';
+import { contentService } from '../../application/content/ContentService';
 import { AuthenticatedRequest } from '../auth/auth.middleware';
 import { validateSchema, commonSchemas } from '../../shared/utils/validation';
 import { logger } from '../../shared/utils/logger';
@@ -48,7 +48,7 @@ export class ContentController {
    * POST /content
    */
   async uploadContent(req: AuthenticatedRequest, res: Response): Promise<void> {
-    if (!req.user || req.user.userType !== 'creator') {
+    if (req.user?.userType !== 'creator') {
       res.status(403).json({
         status: 'error',
         code: 'ACCESS_DENIED',
@@ -108,7 +108,7 @@ export class ContentController {
     const { id } = req.params;
     const subscriberId = req.user?.userType === 'subscriber' ? req.user.userId : undefined;
 
-    const content = await contentService.getContent(id, subscriberId);
+    const content = await contentService.getContent({ contentId: id, subscriberId });
 
     res.status(200).json({
       status: 'success',
@@ -122,7 +122,7 @@ export class ContentController {
    * PUT /content/:id
    */
   async updateContent(req: AuthenticatedRequest, res: Response): Promise<void> {
-    if (!req.user || req.user.userType !== 'creator') {
+    if (req.user?.userType !== 'creator') {
       res.status(403).json({
         status: 'error',
         code: 'ACCESS_DENIED',
@@ -150,7 +150,7 @@ export class ContentController {
    * DELETE /content/:id
    */
   async deleteContent(req: AuthenticatedRequest, res: Response): Promise<void> {
-    if (!req.user || req.user.userType !== 'creator') {
+    if (req.user?.userType !== 'creator') {
       res.status(403).json({
         status: 'error',
         code: 'ACCESS_DENIED',
@@ -162,7 +162,7 @@ export class ContentController {
 
     const { id } = req.params;
 
-    await contentService.deleteContent(id, req.user.userId);
+    await contentService.deleteContent({ contentId: id, creatorId: req.user.userId });
 
     res.status(200).json({
       status: 'success',
@@ -182,11 +182,11 @@ export class ContentController {
     const filters = {
       genre: genre as string | undefined,
       tags: tags ? (tags as string).split(',') : undefined,
-      isActive: isActive === 'true' ? true : isActive === 'false' ? false : undefined,
+      isActive: !!isActive || undefined,
       sortBy: sortBy as any,
       sortOrder: sortOrder as any,
-      page: page ? parseInt(page as string, 10) : undefined,
-      limit: limit ? parseInt(limit as string, 10) : undefined,
+      page: page ? Number.parseInt(page as string, 10) : undefined,
+      limit: limit ? Number.parseInt(limit as string, 10) : undefined,
     };
 
     const result = await contentService.getCreatorLibrary(creatorId, filters);
@@ -204,7 +204,7 @@ export class ContentController {
    * POST /playlists
    */
   async createPlaylist(req: AuthenticatedRequest, res: Response): Promise<void> {
-    if (!req.user || req.user.userType !== 'creator') {
+    if (req.user?.userType !== 'creator') {
       res.status(403).json({
         status: 'error',
         code: 'ACCESS_DENIED',
@@ -252,7 +252,7 @@ export class ContentController {
    * PUT /playlists/:id
    */
   async updatePlaylist(req: AuthenticatedRequest, res: Response): Promise<void> {
-    if (!req.user || req.user.userType !== 'creator') {
+    if (req.user?.userType !== 'creator') {
       res.status(403).json({
         status: 'error',
         code: 'ACCESS_DENIED',
@@ -280,7 +280,7 @@ export class ContentController {
    * DELETE /playlists/:id
    */
   async deletePlaylist(req: AuthenticatedRequest, res: Response): Promise<void> {
-    if (!req.user || req.user.userType !== 'creator') {
+    if (req.user?.userType !== 'creator') {
       res.status(403).json({
         status: 'error',
         code: 'ACCESS_DENIED',
@@ -322,7 +322,7 @@ export class ContentController {
    * POST /playlists/:id/content
    */
   async addContentToPlaylist(req: AuthenticatedRequest, res: Response): Promise<void> {
-    if (!req.user || req.user.userType !== 'creator') {
+    if (req.user?.userType !== 'creator') {
       res.status(403).json({
         status: 'error',
         code: 'ACCESS_DENIED',
@@ -353,7 +353,7 @@ export class ContentController {
    * DELETE /playlists/:id/content/:contentId
    */
   async removeContentFromPlaylist(req: AuthenticatedRequest, res: Response): Promise<void> {
-    if (!req.user || req.user.userType !== 'creator') {
+    if (req.user?.userType !== 'creator') {
       res.status(403).json({
         status: 'error',
         code: 'ACCESS_DENIED',

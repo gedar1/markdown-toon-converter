@@ -44,4 +44,13 @@ export const accessService = {
     );
     return response.data.data;
   },
+
+  /**
+   * Get my access grants (current user)
+   */
+  async getMyAccessGrants(): Promise<AccessGrant[]> {
+    const response =
+      await api.get<ApiResponse<AccessGrant[]>>("/access/my-grants");
+    return response.data.data;
+  },
 };

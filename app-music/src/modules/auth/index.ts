@@ -2,7 +2,7 @@
  * Authentication module exports
  */
 
-export { authService, AuthService } from './auth.service';
+export { authService, AuthService } from '../../application/auth/AuthService';
 export { authController, AuthController } from './auth.controller';
 export {
   authenticate,

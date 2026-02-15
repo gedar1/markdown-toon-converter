@@ -9,6 +9,8 @@ export function GoLive() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [recordingEnabled, setRecordingEnabled] = useState(true);
+  const [scheduledFor, setScheduledFor] = useState("");
+  const [isScheduled, setIsScheduled] = useState(false);
   const [showStreamKey, setShowStreamKey] = useState(false);
   const [createdStream, setCreatedStream] = useState<LiveStream | null>(null);
 
@@ -137,6 +139,7 @@ export function GoLive() {
     createMutation.mutate({
       title,
       description: description || undefined,
+      scheduledFor: isScheduled && scheduledFor ? scheduledFor : undefined,
       recordingEnabled,
     });
   };
@@ -189,6 +192,39 @@ export function GoLive() {
             <div className="flex items-center">
               <input
                 type="checkbox"
+                id="scheduled"
+                checked={isScheduled}
+                onChange={(e) => setIsScheduled(e.target.checked)}
+                className="mr-2"
+              />
+              <label htmlFor="scheduled" className="text-sm">
+                Programar para más tarde
+              </label>
+            </div>
+
+            {isScheduled && (
+              <div>
+                <label className="block text-sm font-medium mb-2">
+                  Fecha y Hora *
+                </label>
+                <input
+                  type="datetime-local"
+                  value={scheduledFor}
+                  onChange={(e) => setScheduledFor(e.target.value)}
+                  min={new Date().toISOString().slice(0, 16)}
+                  className="w-full px-4 py-2 bg-white text-gray-900 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                  required={isScheduled}
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  Los subscribers podrán ver esta transmisión programada y
+                  comprar acceso anticipado
+                </p>
+              </div>
+            )}
+
+            <div className="flex items-center">
+              <input
+                type="checkbox"
                 id="recording"
                 checked={recordingEnabled}
                 onChange={(e) => setRecordingEnabled(e.target.checked)}
@@ -204,7 +240,11 @@ export function GoLive() {
               disabled={createMutation.isPending}
               className="w-full bg-red-600 text-white py-3 rounded-lg hover:bg-red-700 disabled:bg-gray-400"
             >
-              {createMutation.isPending ? "Creando..." : "Crear Transmisión"}
+              {createMutation.isPending
+                ? "Creando..."
+                : isScheduled
+                  ? "Programar Transmisión"
+                  : "Crear Transmisión"}
             </button>
           </form>
         </div>

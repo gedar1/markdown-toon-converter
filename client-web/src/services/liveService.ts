@@ -41,6 +41,16 @@ export const liveService = {
   },
 
   /**
+   * Get scheduled streams (Subscriber)
+   */
+  async getScheduledStreams(): Promise<LiveStream[]> {
+    const response = await api.get<ApiResponse<LiveStream[]>>(
+      "/live/streams/scheduled",
+    );
+    return response.data.data;
+  },
+
+  /**
    * Get stream by ID
    */
   async getStream(streamId: string): Promise<LiveStream> {

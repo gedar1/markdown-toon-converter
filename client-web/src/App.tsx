@@ -11,8 +11,12 @@ import { ContentUpload } from "./pages/creator/ContentUpload";
 import { ContentLibrary } from "./pages/creator/ContentLibrary";
 import { GoLive } from "./pages/creator/GoLive";
 import { Discover } from "./pages/subscriber/Discover";
+import { CreatorProfile } from "./pages/subscriber/CreatorProfile";
+import { MyLibrary } from "./pages/subscriber/MyLibrary";
+import { AudioPlayer } from "./pages/subscriber/AudioPlayer";
 import { LiveStreams } from "./pages/subscriber/LiveStreams";
 import { LivePlayer } from "./pages/subscriber/LivePlayer";
+import { PaymentSuccess } from "./pages/PaymentSuccess";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -73,7 +77,7 @@ function App() {
                   effectiveUserType === "creator" ? (
                     <Navigate to="/creator/dashboard" replace />
                   ) : (
-                    <Navigate to="/discover" replace />
+                    <Navigate to="/live" replace />
                   )
                 ) : (
                   <Navigate to="/login" replace />
@@ -125,6 +129,30 @@ function App() {
               }
             />
             <Route
+              path="/creator/:creatorId"
+              element={
+                <ProtectedRoute requiredUserType="subscriber">
+                  <CreatorProfile />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/library"
+              element={
+                <ProtectedRoute requiredUserType="subscriber">
+                  <MyLibrary />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/play/:contentId"
+              element={
+                <ProtectedRoute requiredUserType="subscriber">
+                  <AudioPlayer />
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path="/live"
               element={
                 <ProtectedRoute requiredUserType="subscriber">
@@ -137,6 +165,14 @@ function App() {
               element={
                 <ProtectedRoute requiredUserType="subscriber">
                   <LivePlayer />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/payment/success"
+              element={
+                <ProtectedRoute requiredUserType="subscriber">
+                  <PaymentSuccess />
                 </ProtectedRoute>
               }
             />

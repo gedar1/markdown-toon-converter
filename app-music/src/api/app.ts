@@ -7,11 +7,13 @@ import { logger, morganStream } from '../shared/utils/logger';
 
 // Import routes
 import authRoutes from '../modules/auth/auth.routes';
-import usersRoutes from '../modules/users/users.routes';
+import creatorsRoutes from '../modules/users/users.routes';
+import subscribersRoutes from '../modules/users/subscribers.routes';
 import accessRoutes from '../modules/access/access.routes';
 import contentRoutes from '../modules/content/content.routes';
 import streamingRoutes from '../modules/streaming/streaming.routes';
 import liveRoutes from '../modules/live/live.routes';
+import paymentRoutes from '../modules/payments/payment.routes';
 
 /**
  * Create and configure Express application
@@ -68,6 +70,7 @@ export function createApp(): Application {
         playlists: '/playlists',
         stream: '/stream',
         live: '/live',
+        payments: '/payments',
         webhooks: '/webhooks',
       },
     });
@@ -75,14 +78,13 @@ export function createApp(): Application {
 
   // Mount API routes
   app.use('/auth', authRoutes);
-  app.use('/users', usersRoutes);
-  app.use('/creators', usersRoutes); // Alias for creator routes
-  app.use('/subscribers', usersRoutes); // Alias for subscriber routes
+  app.use('/creators', creatorsRoutes);
+  app.use('/subscribers', subscribersRoutes);
   app.use('/access', accessRoutes);
   app.use('/content', contentRoutes);
-  app.use('/playlists', contentRoutes); // Playlist routes are in content module
   app.use('/stream', streamingRoutes);
-  app.use('/live', liveRoutes); // Live streaming routes
+  app.use('/live', liveRoutes);
+  app.use('/payments', paymentRoutes);
   app.use('/webhooks', accessRoutes); // Webhook routes are in access module
 
   // 404 handler (must be after all routes)

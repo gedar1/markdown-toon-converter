@@ -1,17 +1,12 @@
 import { Router } from 'express';
 import { usersController } from './users.controller';
-import {
-  authenticate,
-  authorizeCreator,
-  authorizeSubscriber,
-  optionalAuthenticate,
-} from '../auth/auth.middleware';
+import { authenticate, authorizeCreator, optionalAuthenticate } from '../auth/auth.middleware';
 import { asyncHandler } from '../../shared/errors/errorHandler';
 
 const router = Router();
 
 /**
- * Creator routes
+ * Creator routes (mounted at /creators in app.ts)
  */
 
 /**
@@ -21,7 +16,7 @@ const router = Router();
  * @query   query, genres, sortBy, sortOrder, page, limit
  */
 router.get(
-  '/creators',
+  '/',
   optionalAuthenticate,
   asyncHandler(usersController.listCreators.bind(usersController))
 );
@@ -33,7 +28,7 @@ router.get(
  * @query   q (search query)
  */
 router.get(
-  '/creators/search',
+  '/search',
   optionalAuthenticate,
   asyncHandler(usersController.searchCreators.bind(usersController))
 );
@@ -43,7 +38,7 @@ router.get(
  * @desc    Get creator profile by ID
  * @access  Public
  */
-router.get('/creators/:id', asyncHandler(usersController.getCreatorProfile.bind(usersController)));
+router.get('/:id', asyncHandler(usersController.getCreatorProfile.bind(usersController)));
 
 /**
  * @route   PUT /creators/:id
@@ -52,7 +47,7 @@ router.get('/creators/:id', asyncHandler(usersController.getCreatorProfile.bind(
  * @body    { displayName?, bio?, avatarUrl?, genres? }
  */
 router.put(
-  '/creators/:id',
+  '/:id',
   authenticate,
   authorizeCreator,
   asyncHandler(usersController.updateCreatorProfile.bind(usersController))
@@ -64,49 +59,10 @@ router.put(
  * @access  Private (creator only, own subscribers)
  */
 router.get(
-  '/creators/:id/subscribers',
+  '/:id/subscribers',
   authenticate,
   authorizeCreator,
   asyncHandler(usersController.getCreatorSubscribers.bind(usersController))
-);
-
-/**
- * Subscriber routes
- */
-
-/**
- * @route   GET /subscribers/:id
- * @desc    Get subscriber profile by ID
- * @access  Public
- */
-router.get(
-  '/subscribers/:id',
-  asyncHandler(usersController.getSubscriberProfile.bind(usersController))
-);
-
-/**
- * @route   PUT /subscribers/:id
- * @desc    Update subscriber profile
- * @access  Private (subscriber only, own profile)
- * @body    { displayName?, bio?, avatarUrl? }
- */
-router.put(
-  '/subscribers/:id',
-  authenticate,
-  authorizeSubscriber,
-  asyncHandler(usersController.updateSubscriberProfile.bind(usersController))
-);
-
-/**
- * @route   GET /subscribers/:id/access
- * @desc    Get subscriber's access list (creators they have access to)
- * @access  Private (subscriber only, own access list)
- */
-router.get(
-  '/subscribers/:id/access',
-  authenticate,
-  authorizeSubscriber,
-  asyncHandler(usersController.getSubscriberAccessList.bind(usersController))
 );
 
 export default router;
