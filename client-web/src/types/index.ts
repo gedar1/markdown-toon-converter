@@ -77,7 +77,7 @@ export interface Content {
   playCount: number;
   createdAt: string;
   updatedAt: string;
-  genre: string;
+  genre?: string;
 }
 
 export interface Playlist {

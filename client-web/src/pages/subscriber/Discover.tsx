@@ -229,7 +229,7 @@ export function Discover() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {creators.map((creator) => (
           <div
-            key={creator.id}
+            key={creator.userId}
             className="bg-white rounded-lg shadow hover:shadow-lg transition-shadow p-6 relative"
           >
             {/* LIVE Badge */}
@@ -240,7 +240,7 @@ export function Discover() {
               </div>
             )}
 
-            <Link to={`/creator/${creator.id}`} className="block">
+            <Link to={`/creator/${creator.userId}`} className="block">
               <div className="flex items-center space-x-4 mb-4">
                 <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
                   <span className="text-2xl font-bold text-blue-600">
@@ -288,11 +288,11 @@ export function Discover() {
             </Link>
 
             <button
-              onClick={(e) => handleBuyAccess(e, creator.id)}
-              disabled={purchasingCreatorId === creator.id}
+              onClick={(e) => handleBuyAccess(e, creator.userId)}
+              disabled={purchasingCreatorId === creator.userId}
               className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white px-4 py-2 rounded-lg font-medium transition-colors"
             >
-              {purchasingCreatorId === creator.id
+              {purchasingCreatorId === creator.userId
                 ? "Processing..."
                 : "Buy Access - $9.99"}
             </button>

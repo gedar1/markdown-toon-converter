@@ -25,8 +25,9 @@ export function createApp(): Application {
   app.use(helmet());
 
   // CORS configuration
+  const corsOrigins = (process.env.CORS_ORIGIN || '*').split(',').map((origin) => origin.trim());
   const corsOptions = {
-    origin: process.env.CORS_ORIGIN || '*',
+    origin: corsOrigins,
     credentials: true,
     optionsSuccessStatus: 200,
   };
