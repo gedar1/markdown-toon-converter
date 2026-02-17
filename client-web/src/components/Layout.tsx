@@ -31,7 +31,7 @@ export function Layout({ children }: LayoutProps) {
             <div className="flex">
               <Link to="/" className="flex items-center">
                 <span className="text-xl font-bold text-blue-600">
-                  🎵 Music Platform
+                  🎵 DJ App
                 </span>
               </Link>
 

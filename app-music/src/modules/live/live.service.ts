@@ -24,7 +24,7 @@ class LiveStreamingService {
   async createLiveStream(creatorId: string, data: CreateLiveStreamRequest): Promise<LiveStream> {
     // Validate creator exists
     const creator = await prisma.creatorProfile.findUnique({
-      where: { id: creatorId },
+      where: { userId: creatorId },
     });
 
     if (!creator) {
@@ -105,7 +105,6 @@ class LiveStreamingService {
             id: true,
             displayName: true,
             avatarUrl: true,
-            genre: true,
           },
         },
       },

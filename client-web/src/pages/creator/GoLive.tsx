@@ -70,6 +70,7 @@ export function GoLive() {
       ? async (data: {
           title: string;
           description?: string;
+          scheduledFor?: string;
           recordingEnabled?: boolean;
         }) => ({
           id: `stream-${Date.now()}`,
