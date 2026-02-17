@@ -1,22 +1,92 @@
 services:
+  # Base de datos PostgreSQL
   postgres:
     image: postgres:16-alpine
-    container_name: music-platform-db
-    restart: unless-stopped
+    container_name: music-db
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: music_streaming_platform
+      POSTGRES_USER: ${DB_USER:-music_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-music_password}
+      POSTGRES_DB: ${DB_NAME:-music_streaming_platform}
     ports:
       - "5432:5432"
     volumes:
+      # Volumen persistente para datos de la BD
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-music_user}"]
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - music-network
+
+  # Backend - API Node.js
+  backend:
+    build:
+      context: ./app-music
+      dockerfile: Dockerfile
+    container_name: music-backend
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      NODE_ENV: ${NODE_ENV:-development}
+      PORT: 3002
+      HOST: 0.0.0.0
+      DATABASE_URL: postgresql://${DB_USER:-music_user}:${DB_PASSWORD:-music_password}@postgres:5432/${DB_NAME:-music_streaming_platform}
+      JWT_SECRET: ${JWT_SECRET:-your-super-secret-jwt-key-change-this-in-production}
+      JWT_EXPIRES_IN: 7d
+      CORS_ORIGIN: "http://localhost:5173,http://localhost:3001,http://localhost:3000"
+      FRONTEND_URL: http://localhost:5173
+      UPLOAD_DIR: /app/uploads
+      MAX_FILE_SIZE: 52428800
+      ALLOWED_AUDIO_FORMATS: mp3,wav,flac
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-sk_test_}
+      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET:-whsec_}
+      STRIPE_PUBLISHABLE_KEY: ${STRIPE_PUBLISHABLE_KEY:-pk_test_}
+    ports:
+      - "3002:3002"
+      - "5555:5555"
+    volumes:
+      # Volumen para uploads persistentes
+      - backend_uploads:/app/uploads
+      # Volumen para logs
+      - backend_logs:/app/logs
+      # Volumen para desarrollo (opcional - comentar en producción)
+      - ./app-music/src:/app/src
+    networks:
+      - music-network
+    restart: unless-stopped
+
+  # Frontend - React/Vite
+  frontend:
+    build:
+      context: ./client-web
+      dockerfile: Dockerfile
+    container_name: music-frontend
+    depends_on:
+      - backend
+    environment:
+      VITE_API_URL: http://backend:3002
+    ports:
+      - "5173:5173"
+    volumes:
+      # Volumen para desarrollo (hot reload)
+      - ./client-web/src:/app/src
+      - ./client-web/index.html:/app/index.html
+    networks:
+      - music-network
+    restart: unless-stopped
 
 volumes:
   postgres_data:
     driver: local
+  backend_uploads:
+    driver: local
+  backend_logs:
+    driver: local
+
+networks:
+  music-network:
+    driver: bridge
