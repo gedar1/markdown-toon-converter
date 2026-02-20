@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { liveStreamingService } from './live.service';
 import { logger } from '../../shared/utils/logger';
+import { notificationService } from '../notifications/notification.service';
 import type { CreateLiveStreamRequest, UpdateLiveStreamRequest } from './live.types';
 
 /**
@@ -154,6 +155,9 @@ export class LiveStreamingController {
 
       const stream = await liveStreamingService.startStream(streamKey);
 
+      // Emit real-time notification to subscribers
+      notificationService.notifyStreamStarted(stream);
+
       logger.info('Live stream started', { streamId: stream.id, streamKey });
 
       res.json({
@@ -175,6 +179,9 @@ export class LiveStreamingController {
       const userId = req.user!.userId;
 
       const stream = await liveStreamingService.endStream(streamId, userId);
+
+      // Emit real-time notification to subscribers
+      notificationService.notifyStreamEnded(stream);
 
       logger.info('Live stream ended', { streamId, creatorId: userId });
 

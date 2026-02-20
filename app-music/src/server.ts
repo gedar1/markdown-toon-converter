@@ -1,7 +1,9 @@
 import dotenv from 'dotenv';
+import http from 'http';
 import { createApp } from './api/app';
 import { logger } from './shared/utils/logger';
 import { disconnectDatabase } from './shared/database/client';
+import { initializeSocketIO } from './modules/notifications/notification.service';
 
 // Load environment variables
 dotenv.config();
@@ -19,8 +21,12 @@ async function startServer() {
     // Create Express app
     const app = createApp();
 
+    // Create HTTP server and attach Socket.IO
+    const httpServer = http.createServer(app);
+    initializeSocketIO(httpServer);
+
     // Start listening
-    const server = app.listen(PORT, () => {
+    const server = httpServer.listen(PORT, () => {
       logger.info('Server started successfully', {
         port: PORT,
         host: HOST,
