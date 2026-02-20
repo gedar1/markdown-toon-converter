@@ -17,6 +17,7 @@ import { AudioPlayer } from "./pages/subscriber/AudioPlayer";
 import { LiveStreams } from "./pages/subscriber/LiveStreams";
 import { LivePlayer } from "./pages/subscriber/LivePlayer";
 import { PaymentSuccess } from "./pages/PaymentSuccess";
+import { NotificationToast } from "./components/NotificationToast";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -26,6 +27,10 @@ const queryClient = new QueryClient({
     },
   },
 });
+
+import { ThemeProvider } from "./hooks/useTheme";
+
+// ... imports
 
 function App() {
   const { initAuth, isAuthenticated, user } = useAuthStore();
@@ -44,9 +49,11 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <Layout>
-          <Routes>
+      <ThemeProvider>
+        <BrowserRouter>
+          <NotificationToast />
+          <Layout>
+            <Routes>
             {/* Public routes */}
             <Route
               path="/login"
@@ -182,6 +189,7 @@ function App() {
           </Routes>
         </Layout>
       </BrowserRouter>
+    </ThemeProvider>
     </QueryClientProvider>
   );
 }
